@@ -1,0 +1,12 @@
+{
+  "name": "Ratoflix",
+  "description": "Plataforma de streaming de alta qualidade",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
