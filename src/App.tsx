@@ -13,6 +13,7 @@ import {
   Check, 
   ShieldCheck
 } from "lucide-react";
+import cinevaHorizontalLogo from "./assets/images/cineva_horizontal_1790650835186.jpg";
 import cinevaBrandLogo from "./assets/images/cineva_brand_logo_1790650823861.jpg";
 
 type Step = "landing" | "checkout" | "payment";
@@ -24,8 +25,31 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   const handleCopyPix = () => {
+    const pixKey = "34331522000198";
     if (navigator?.clipboard?.writeText) {
-      navigator.clipboard.writeText("34331522000198");
+      navigator.clipboard.writeText(pixKey).catch(() => {
+        const textArea = document.createElement("textarea");
+        textArea.value = pixKey;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand("copy");
+        } catch {
+          // Fallback handled
+        }
+        document.body.removeChild(textArea);
+      });
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = pixKey;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand("copy");
+      } catch {
+        // Fallback handled
+      }
+      document.body.removeChild(textArea);
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -39,11 +63,11 @@ export default function App() {
       setLoading(false);
       setStep("checkout");
       try {
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } catch {
         // Safe fallback
       }
-    }, 400);
+    }, 350);
   };
 
   const handleProceedToPayment = () => {
@@ -52,11 +76,11 @@ export default function App() {
       setLoading(false);
       setStep("payment");
       try {
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } catch {
         // Safe fallback
       }
-    }, 400);
+    }, 350);
   };
 
   return (
@@ -74,32 +98,39 @@ export default function App() {
           onClick={() => setStep("landing")}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden shadow-xl shadow-red-600/40 border-2 border-red-500/60 bg-black flex items-center justify-center shrink-0">
+          {/* Uncropped, high-resolution horizontal Cineva logo */}
+          <div className="h-10 md:h-12 flex items-center">
             <img 
-              src={cinevaBrandLogo} 
-              alt="Cineva Logo" 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              src={cinevaHorizontalLogo} 
+              alt="Cineva" 
+              className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_20px_rgba(220,38,38,0.5)] group-hover:scale-105 transition-transform duration-300 rounded-lg"
+              onError={(e) => {
+                // Fallback to brand logo if horizontal fails
+                (e.currentTarget as HTMLImageElement).src = cinevaBrandLogo;
+              }}
             />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-2xl font-black tracking-wider uppercase italic leading-none">
-              CINE<span className="text-red-600">VA</span>
-            </span>
-            <span className="text-[9px] text-white/50 tracking-[0.25em] uppercase font-bold">
-              Streaming Premium
-            </span>
           </div>
         </div>
 
         <div className="flex items-center gap-8 text-sm font-medium text-white/60 uppercase tracking-widest hidden sm:flex">
           <button 
             onClick={() => setStep("landing")} 
-            className={`transition-colors hover:text-white ${step === 'landing' ? 'text-white border-b-2 border-red-600 pb-1 font-bold' : ''}`}
+            className={`transition-colors hover:text-white cursor-pointer ${step === 'landing' ? 'text-white border-b-2 border-red-600 pb-1 font-bold' : ''}`}
           >
             Ativação
           </button>
-          <button className="transition-colors hover:text-white">Catálogo</button>
-          <button className="transition-colors hover:text-white">Suporte</button>
+          <button 
+            onClick={() => setStep("landing")}
+            className="transition-colors hover:text-white cursor-pointer"
+          >
+            Catálogo
+          </button>
+          <button 
+            onClick={() => setStep("landing")}
+            className="transition-colors hover:text-white cursor-pointer"
+          >
+            Suporte
+          </button>
         </div>
       </nav>
 
@@ -111,11 +142,11 @@ export default function App() {
             <div className="space-y-8">
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                  <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden shadow-2xl shadow-red-600/50 border-2 border-red-500/60 bg-black flex items-center justify-center shrink-0">
+                  <div className="relative h-14 md:h-16 px-3 py-1.5 rounded-2xl bg-black/60 border border-red-500/40 shadow-xl shadow-red-600/30 flex items-center justify-center shrink-0">
                     <img 
-                      src={cinevaBrandLogo} 
+                      src={cinevaHorizontalLogo} 
                       alt="Cineva Logo" 
-                      className="w-full h-full object-cover"
+                      className="h-full w-auto object-contain drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]"
                     />
                   </div>
                   <div>
@@ -246,8 +277,8 @@ export default function App() {
               <div className="p-8 md:p-10 space-y-8">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-red-500/50 bg-black flex items-center justify-center shadow-lg shadow-red-600/30 shrink-0">
-                      <img src={cinevaBrandLogo} alt="Cineva" className="w-full h-full object-cover" />
+                    <div className="h-12 md:h-14 px-3 py-1 rounded-2xl bg-black border border-red-500/40 shadow-md shadow-red-600/30 flex items-center justify-center shrink-0">
+                      <img src={cinevaHorizontalLogo} alt="Cineva" className="h-full w-auto object-contain" />
                     </div>
                     <div>
                       <h3 className="text-2xl font-black uppercase italic tracking-tight">
@@ -327,8 +358,8 @@ export default function App() {
             <div className="bg-white p-7 md:p-8 rounded-[36px] flex flex-col items-center gap-6 shadow-2xl relative border-t-4 border-red-600 text-gray-900">
               <div className="w-full flex items-center justify-between border-b border-gray-100 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-full overflow-hidden border border-red-600/40 bg-black flex items-center justify-center shrink-0 shadow-md">
-                    <img src={cinevaBrandLogo} alt="Cineva" className="w-full h-full object-cover" />
+                  <div className="h-9 px-2 rounded-xl bg-black border border-red-600/30 flex items-center justify-center shrink-0 shadow-sm">
+                    <img src={cinevaHorizontalLogo} alt="Cineva" className="h-full w-auto object-contain" />
                   </div>
                   <span className="text-xs font-black uppercase tracking-wider text-gray-900">
                     Cineva <span className="text-red-600">VIP</span>
@@ -423,12 +454,11 @@ export default function App() {
       {/* Footer */}
       <footer className="relative z-10 px-6 py-8 border-t border-white/5 bg-black/60 backdrop-blur-md flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-red-500/40 bg-black flex items-center justify-center shrink-0">
-            <img src={cinevaBrandLogo} alt="Cineva Logo" className="w-full h-full object-cover" />
-          </div>
-          <span className="text-sm font-black tracking-wider uppercase italic text-white">
-            CINE<span className="text-red-600">VA</span>
-          </span>
+          <img 
+            src={cinevaHorizontalLogo} 
+            alt="Cineva" 
+            className="h-7 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity" 
+          />
           <span className="text-white/30">|</span>
           <span>© 2026 CINEVA STREAMING. TODOS OS DIREITOS RESERVADOS.</span>
         </div>

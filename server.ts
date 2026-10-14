@@ -32,14 +32,14 @@ async function startServer() {
         identifier: `rf_${Date.now()}`,
         amount: 10.0,
         client: {
-          name: name || "Cliente Rato Flix",
+          name: name || "Cliente Cineva",
           email: email,
           document: sanitizedDocument,
           phone: "1199999999"
         },
         products: [
           {
-            title: "Ativacao Rato Flix VIP",
+            title: "Ativacao Cineva VIP",
             price: 10.0,
             quantity: 1
           }
